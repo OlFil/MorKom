@@ -1,3 +1,29 @@
+function changeHP(n){
+	this.hp -= n;
+	if(this.hp <= 0){
+		this.hp=0;
+	}
+}
+
+function elHP(){
+	const $playerLife=document.querySelector('.player'+ this.player+' .life');
+	return $playerLife;
+}
+
+function renderHP($pL){
+	$pL.style.width= this.hp+'%';
+}
+
+
+function createReloadButton(){
+const $d = createElement('div','reloadWrap');
+const $btn=createElement('button','button');
+$btn.innerText = 'Restart';
+$d.appendChild($btn);
+return $d;
+}
+
+
 
 const Sonya={
 	player:1,
@@ -7,7 +33,10 @@ const Sonya={
 	weapon: ['knife','gun'],
 	attack: function (){
 		console.log(name+' Fight!');
-	}
+	},
+	changeHP: changeHP,
+	renderHP: renderHP,
+	elHP :elHP,
 };
 
 const Subzero={
@@ -18,11 +47,15 @@ const Subzero={
 	weapon:['knife','gun'],
 	attack: function (){
 		console.log(name+' Fight!');
-	}
+	},
+	changeHP: changeHP,
+	renderHP: renderHP,
+	elHP :elHP,
 };
 
 const $arenas= document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
+
 
 function createElement(tag,className){
 	const $tag=document.createElement(tag);
@@ -53,42 +86,48 @@ $char.appendChild($img);
 return $player
 }
 
-function randomiser(){
-return Math.ceil(Math.random()*10);
+function randomiser(a){
+return Math.ceil(Math.random()*a);
 }
 
-function changeHP(player){
-	const $playerLife=document.querySelector('.player'+player.player+' .life');
-	player.hp -= randomiser();
-	if (player.hp>0){
-		$playerLife.style.width=Subzero.hp+'%';
-	}
-	else {
-		$playerLife.style.width='0%';
-	}
-
-	if(player.hp<0){
-		$randomButton.disabled = true;
-		winner(player);
-	}
-}
-
-function winner(player){
-if(player.name===Sonya.name)
-	$arenas.appendChild(playerLose(Subzero.name));
-else
-	$arenas.appendChild(playerLose(Sonya.name));
-}
-
-function playerLose(name){
+function playerWins(name){
 const $loseTitle=createElement('div','loseTitle');
-$loseTitle.innerText=name+' win!';
+if (name){
+	$loseTitle.innerText=name+' win!';
+}
+else {
+$loseTitle.innerText='draw!';
+}
+
 return $loseTitle;
 }
 
 $randomButton.addEventListener('click', function() {
-	changeHP(Sonya);
-	changeHP(Subzero);
+
+	Sonya.changeHP(randomiser(20));
+	Subzero.changeHP(randomiser(20));
+
+	Sonya.renderHP(Sonya.elHP());
+	Subzero.renderHP(Subzero.elHP());
+
+	if (Sonya.hp ===0 || Subzero.hp===0 ){
+		$randomButton.disabled=true;
+		$reloadBtn=createReloadButton();
+		$arenas.appendChild($reloadBtn);
+		$reloadBtn.addEventListener('click', function(){
+		window.location.reload();
+		});
+	}
+
+	if(Sonya.hp===0 && Sonya.hp< Subzero.hp){
+		$arenas.appendChild(playerWins(Subzero.name));
+	}
+	else if (Subzero.hp===0 && Subzero.hp< Sonya.hp){
+		$arenas.appendChild(playerWins(Sonya.name));
+	}
+	else if (Sonya.hp===0 && Subzero.hp===0){
+		$arenas.appendChild(playerWins());
+	}
 });	
 
 $arenas.appendChild(createPlayer(Sonya));
