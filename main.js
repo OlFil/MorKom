@@ -10,20 +10,33 @@ function elHP(){
 	return $playerLife;
 }
 
-function renderHP($pL){
-	$pL.style.width= this.hp+'%';
+function renderHP(){
+	this.elHP().style.width= this.hp+'%';
 }
-
 
 function createReloadButton(){
 const $d = createElement('div','reloadWrap');
 const $btn=createElement('button','button');
 $btn.innerText = 'Restart';
+
+$btn.addEventListener('click',function(){
+	window.location.reload();
+});
+
 $d.appendChild($btn);
-return $d;
+$arenas.appendChild($d);
 }
 
+function attack(){
+	console.log(this.name+' Fight!');
+}
 
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 const Sonya={
 	player:1,
@@ -31,12 +44,11 @@ const Sonya={
 	hp: 100,
 	img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
 	weapon: ['knife','gun'],
-	attack: function (){
-		console.log(name+' Fight!');
-	},
-	changeHP: changeHP,
-	renderHP: renderHP,
-	elHP :elHP,
+	attack,
+	changeHP,
+	renderHP,
+	elHP,
+	shoot,
 };
 
 const Subzero={
@@ -45,16 +57,16 @@ const Subzero={
 	hp: 100,
 	img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
 	weapon:['knife','gun'],
-	attack: function (){
-		console.log(name+' Fight!');
-	},
-	changeHP: changeHP,
-	renderHP: renderHP,
-	elHP :elHP,
+	attack,
+	changeHP,
+	renderHP,
+	elHP,
+	shoot,
 };
 
 const $arenas= document.querySelector('.arenas');
-const $randomButton = document.querySelector('.button');
+const $button = document.querySelector('.button');
+const $formFight = document.querySelector('.control');
 
 
 function createElement(tag,className){
@@ -102,21 +114,17 @@ $loseTitle.innerText='draw!';
 return $loseTitle;
 }
 
-$randomButton.addEventListener('click', function() {
+/*$randomButton.addEventListener('click', function() {
 
 	Sonya.changeHP(randomiser(20));
 	Subzero.changeHP(randomiser(20));
 
-	Sonya.renderHP(Sonya.elHP());
-	Subzero.renderHP(Subzero.elHP());
+	Sonya.renderHP();
+	Subzero.renderHP();
 
 	if (Sonya.hp ===0 || Subzero.hp===0 ){
 		$randomButton.disabled=true;
-		$reloadBtn=createReloadButton();
-		$arenas.appendChild($reloadBtn);
-		$reloadBtn.addEventListener('click', function(){
-		window.location.reload();
-		});
+		createReloadButton();
 	}
 
 	if(Sonya.hp===0 && Sonya.hp< Subzero.hp){
@@ -128,7 +136,70 @@ $randomButton.addEventListener('click', function() {
 	else if (Sonya.hp===0 && Subzero.hp===0){
 		$arenas.appendChild(playerWins());
 	}
-});	
+});	*/
+function enemyAttack(){
+	const hit=ATTACK[randomiser(3)-1];
+	const defence = ATTACK[randomiser(3)-1];
+	return {
+		value: randomiser(HIT[hit]),
+		hit,
+		defence,
+	}
+}
+
+$formFight.addEventListener('submit',function(e){
+	e.preventDefault();
+	console.dir($formFight);
+	const enemy = enemyAttack();
+	const attack = {};
+	for (let item of $formFight){
+		if (item.checked && item.name==='hit'){
+			attack.value = randomiser(HIT[item.value]);
+			attack.hit = item.value;
+		}
+
+		if (item.checked && item.name==='defence'){
+			attack.defence=item.value;
+		}
+		item.checked=false;
+	}
+
+	/*if (attack.defence!=enemy.hit){
+		Sonya.changeHP(enemy.value);
+		Sonya.renderHP();
+	}
+
+	if (enemy.defence!=attack.hit){
+		Subzero.changeHP(attack.value);
+		Subzero.renderHP();
+	}*/
+	Sonya.shoot(attack,enemy);
+	Subzero.shoot(enemy,attack);
+
+	if (Sonya.hp ===0 || Subzero.hp===0 ){
+		$button.disabled=true;
+		createReloadButton();
+	}
+
+	if(Sonya.hp===0 && Sonya.hp< Subzero.hp){
+		$arenas.appendChild(playerWins(Subzero.name));
+	}
+	else if (Subzero.hp===0 && Subzero.hp< Sonya.hp){
+		$arenas.appendChild(playerWins(Sonya.name));
+	}
+	else if (Sonya.hp===0 && Subzero.hp===0){
+		$arenas.appendChild(playerWins());
+	}
+	console.log('####: a', attack);
+	console.log('####: e', enemy);
+});
+
+function shoot(a,b) {
+	if (a.defence!=b.hit){
+		this.changeHP(b.value);
+		this.renderHP();
+	}
+}
 
 $arenas.appendChild(createPlayer(Sonya));
 $arenas.appendChild(createPlayer(Subzero));
