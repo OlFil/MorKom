@@ -1,3 +1,12 @@
+import {player} from './player.js';
+import randomiser from './utils.js';
+import createReloadButton from './createReloadButton.js';
+import createElement from './createElement.js';
+import playerWins from './playersWins.js';
+import playerLose from './playerLose.js';
+import enemyAttack from './enemyAttack.js';
+import playerAttack from './playerAttack.js';
+
 const logs = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
     end: [
@@ -55,18 +64,7 @@ function renderHP(){
 	this.elHP().style.width= this.hp+'%';
 }
 
-function createReloadButton(){
-const $d = createElement('div','reloadWrap');
-const $btn=createElement('button','button');
-$btn.innerText = 'Restart';
 
-$btn.addEventListener('click',function(){
-	window.location.reload();
-});
-
-$d.appendChild($btn);
-$arenas.appendChild($d);
-}
 
 function attack(){
 	console.log(this.name+' Fight!');
@@ -89,7 +87,6 @@ const Sonya={
 	changeHP,
 	renderHP,
 	elHP,
-	shoot,
 };
 
 const Subzero={
@@ -102,7 +99,6 @@ const Subzero={
 	changeHP,
 	renderHP,
 	elHP,
-	shoot,
 };
 
 const $arenas= document.querySelector('.arenas');
@@ -110,14 +106,6 @@ const $button = document.querySelector('.button');
 const $formFight = document.querySelector('.control');
 const $chat = document.querySelector('.chat');
 
-
-function createElement(tag,className){
-	const $tag=document.createElement(tag);
-	if(className){
-		$tag.classList.add(className);
-	}
-	return $tag;
-}
 
 function createPlayer(obj) {
 
@@ -140,95 +128,6 @@ $char.appendChild($img);
 return $player
 }
 
-function randomiser(a){
-return Math.ceil(Math.random()*a);
-}
-
-function playerWins(name){
-const $loseTitle=createElement('div','loseTitle');
-if (name){
-	$loseTitle.innerText=name+' win!';
-}
-else {
-	$loseTitle.innerText='draw!';
-	genarateLogs('draw');
-}
-return $loseTitle;
-}
-
-function playerLose(a,b){
-if (a.hp ===0){
-	return {
-			l : a.name,
-			w : b.name,
-			};
-}
-else{
- 	return {
- 			l : b.name,
-			w : a.name,
-			};
-	}
-}
-
-/*function genarateLogs(type, player1, player2){
-	switch
-			const text = logs[type][0].replace('[playerKick]',player1.name).replace('[playerDefence]',player2.name);
-			//console.log(text);
-			const el=`<p>${text}</p>`; 
-			$chat.insertAdjacentHTML('afterbegin',el);	
-}*/
-
-/*$randomButton.addEventListener('click', function() {
-
-	Sonya.changeHP(randomiser(20));
-	Subzero.changeHP(randomiser(20));
-
-	Sonya.renderHP();
-	Subzero.renderHP();
-
-	if (Sonya.hp ===0 || Subzero.hp===0 ){
-		$randomButton.disabled=true;
-		createReloadButton();
-	}
-
-	if(Sonya.hp===0 && Sonya.hp< Subzero.hp){
-		$arenas.appendChild(playerWins(Subzero.name));
-	}
-	else if (Subzero.hp===0 && Subzero.hp< Sonya.hp){
-		$arenas.appendChild(playerWins(Sonya.name));
-	}
-	else if (Sonya.hp===0 && Subzero.hp===0){
-		$arenas.appendChild(playerWins());
-	}
-});	*/
-function enemyAttack(){
-	const hit=ATTACK[randomiser(3)-1];
-	const defence = ATTACK[randomiser(3)-1];
-	return {
-		value: randomiser(HIT[hit]),
-		hit,
-		defence,
-	}
-}
-
-function playerAttack(){
-	const attack = {};
-	for (let item of $formFight){
-		if (item.checked && item.name==='hit'){
-			attack.value = randomiser(HIT[item.value]);
-			attack.hit = item.value;
-		}
-
-		if (item.checked && item.name==='defence'){
-			attack.defence=item.value;
-		}
-		item.checked=false;
-	}
-
-	return attack;
-}
-
 function showResult(){
 	if (Sonya.hp ===0 || Subzero.hp===0 ){
 		$button.disabled=true;
@@ -246,7 +145,6 @@ function showResult(){
 		$arenas.appendChild(playerWins());
 	}
 }
-
 
 $formFight.addEventListener('submit',function(e){
 	e.preventDefault();
@@ -270,18 +168,10 @@ $formFight.addEventListener('submit',function(e){
 		genarateLogs('defence',Sonya,Subzero);
 	}
 
-	//Sonya.shoot(player,enemy);
-	//Subzero.shoot(enemy,player);
 	showResult();
 });
 
-function shoot(a,b) {
-	/*if (a.defence!=b.hit){
-		this.changeHP(b.value);
-		this.renderHP();
-		genarateLogs('hit',a,b);
-	}*/
-}
+
 $arenas.appendChild(createPlayer(Sonya));
 $arenas.appendChild(createPlayer(Subzero));
 genarateLogs('start',Sonya,Subzero);
