@@ -247,6 +247,7 @@ function showResult(){
 	}
 }
 
+
 $formFight.addEventListener('submit',function(e){
 	e.preventDefault();
 	const enemy = enemyAttack();
@@ -281,7 +282,6 @@ function shoot(a,b) {
 		genarateLogs('hit',a,b);
 	}*/
 }
-
 $arenas.appendChild(createPlayer(Sonya));
 $arenas.appendChild(createPlayer(Subzero));
 genarateLogs('start',Sonya,Subzero);
@@ -325,4 +325,3 @@ function genarateLogs(type, player1, player2,val){
 			console.log('Ошибка где-то...');
 	}
 }
-
