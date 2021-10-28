@@ -1,7 +1,5 @@
-/*function randomiser(a){
-return Math.ceil(Math.random()*a);
-}*/
-const randomiser = (a) => Math.ceil(Math.random()*a);
+export const randomiser = (a) => Math.ceil(Math.random()*a);
+export const $arenas= document.querySelector('.arenas');
+export const  $formFight = document.querySelector('.control');
 
-export default randomiser;
 
