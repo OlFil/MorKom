@@ -1,4 +1,5 @@
 import createElement from './createElement.js';
+
 import {$arenas} from './main.js';
 export function createPlayer(obj) {
 
@@ -20,6 +21,7 @@ $char.appendChild($img);
 
 return $player
 }
+
 
 export function createReloadButton(){
 const $d = createElement('div','reloadWrap');
