@@ -1,5 +1,5 @@
-import randomiser from './utils.js';
-import {Sonya,Subzero} from './obj.js';
+import {randomiser} from './utils.js';
+import {Sonya,Subzero} from './Player.js';
 const logs = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
     end: [

@@ -1,16 +1,17 @@
 import createElement from './createElement.js';
-import {$arenas} from './main.js';
-export function createPlayer(obj) {
+//import {$arenas} from './main.js';
+import {$arenas} from './utils.js';
+export function createPlayer({player,hp, name, img}) {
 
-const $player = createElement('div','player'+obj.player)
+const $player = createElement('div',`player${player}`)
 const $prog = createElement('div','progressbar')
 const $char = createElement('div','character')
 const $name = createElement('div','name')
-$name.innerText = obj.name
+$name.innerText = name
 const $life = createElement('div','life')
-$life.style.width=obj.hp+'%';
+$life.style.width=hp+'%';
 const $img=createElement('img');
-$img.src = obj.img;
+$img.src = img;
 
 $player.appendChild($prog);
 $player.appendChild($char);

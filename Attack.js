@@ -1,8 +1,7 @@
-import {Sonya,Subzero} from './obj.js';
-import randomiser from './utils.js';
+import {Sonya,Subzero} from './Player.js';
 import {createReloadButton} from './creations.js';
 import {genarateLogs} from './Log.js';
-import {$arenas} from './main.js';
+import {randomiser,$arenas} from './utils.js';
 import createElement from './createElement.js';
 
 const HIT = {
